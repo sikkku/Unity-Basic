@@ -5,43 +5,39 @@ using System.Collections.Generic;
 
 public class GachaManager : MonoBehaviour
 {
-
     [System.Serializable]
     public class Character
     {
-        public string name;        
-        public Sprite image;        
-        public float probability;     // 확률 0~100
+        public string name;
+        public Sprite image;
+        public float probability; //확률
     }
 
     [Header("캐릭터 리스트")]
-    public List<Character> characterList; 
+    public List<Character> characterList;
 
-    [Header("10회용 이미지/텍스트")]
-    public Image[] resultImages;               
-    public TextMeshProUGUI[] resultTexts;      
+    [Header("1회 뽑기")]
+    public Image resultSingleImage;
+    public TextMeshProUGUI resultSingleText;
 
-    [Header("1회용 이미지/텍스트")]
-    public Image resultSingleImage;           
-    public TextMeshProUGUI resultSingleText;     
+    [Header("10회 뽑기")]
+    public Image[] resultImages;
+    public TextMeshProUGUI[] resultTexts;
+ 
+    [Header("천장 텍스트")]
+    public TextMeshProUGUI pityText;
 
-    [Header("TMP 출력")]
-    public TextMeshProUGUI pityText;            
+    [Header("버튼")]
+    public GameObject gachaOnceButton;
+    public GameObject gachaTenButton;
+    public GameObject exitButton;
 
-    [Header("버튼 및 UI")]
-    public GameObject gachaOnceButton;           
-    public GameObject gachaTenButton;          
-    public GameObject exitButton;                
+    private int pityCount = 0;
+    private const int pityLimit = 100;
 
-    // 천장 시스템
-    private int pityCount = 0;                   // 현재까지 뽑기 횟수
-    private const int pityLimit = 100;           // 천장 한도
-
-    // 1회 뽑기 실행
     public void GachaOnce()
     {
-        Character selected = GetCharacterByProbability(); // 확률 적용
-
+        Character selected = GetCharacterByProbability();
         resultSingleImage.sprite = selected.image;
 
         if (string.IsNullOrEmpty(selected.name))
@@ -56,14 +52,13 @@ public class GachaManager : MonoBehaviour
         resultSingleImage.gameObject.SetActive(true);
         resultSingleText.gameObject.SetActive(true);
 
-        HideTenResult();        
-        ToggleButtons(false);  
+        HideTenResult();
+        ToggleButtons(false);
 
         pityCount++;
-        UpdatePityText(); 
+        UpdatePityText();
     }
 
-    // 10회 뽑기 실행
     public void GachaTen()
     {
         HideSingleResult();
@@ -71,7 +66,6 @@ public class GachaManager : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             Character selected = GetCharacterByProbability();
-
             resultImages[i].sprite = selected.image;
 
             if (string.IsNullOrEmpty(selected.name))
@@ -93,40 +87,35 @@ public class GachaManager : MonoBehaviour
         UpdatePityText();
     }
 
-    // 확률 적용 뽑기
     Character GetCharacterByProbability()
     {
-        // 천장 SSR
         if (pityCount >= pityLimit)
         {
             pityCount = 0;
-            for (int i = 0; i < characterList.Count; i++)
+            foreach (var c in characterList)
             {
-                if (characterList[i].name.Contains("SSR"))
+                if (c.name.Contains("SSR"))
                 {
-                    return characterList[i];
+                    return c;
                 }
             }
-            return characterList[0]; // SSR 안뜨면 첫 캐릭터 반환
+            return characterList[0];
         }
 
-        // 일반 확률
         float rand = Random.Range(0f, 100f);
         float cumulative = 0f;
 
-        for (int i = 0; i < characterList.Count; i++)
+        foreach (var c in characterList)
         {
-            cumulative += characterList[i].probability;
+            cumulative += c.probability;
             if (rand < cumulative)
             {
-                return characterList[i];
+                return c;
             }
         }
 
-        //  fallback
-        return characterList[characterList.Count - 1];
+        return characterList[characterList.Count - 1]; // fallback
     }
-
 
     public void ReturnToMain()
     {
@@ -135,22 +124,21 @@ public class GachaManager : MonoBehaviour
         ToggleButtons(true);
     }
 
-
     void UpdatePityText()
     {
-        if (pityText != null)
+        if (pityText == null)
         {
-            pityText.text = "천장 카운트: " + pityCount + " / " + pityLimit;
+            return;
         }
-    }
 
+        pityText.text = "천장 카운트: " + pityCount + " / " + pityLimit;
+    }
 
     void HideSingleResult()
     {
         resultSingleImage.gameObject.SetActive(false);
         resultSingleText.gameObject.SetActive(false);
     }
-
 
     void HideTenResult()
     {
@@ -163,24 +151,26 @@ public class GachaManager : MonoBehaviour
 
     void ToggleButtons(bool showMainButtons)
     {
-        if (gachaOnceButton != null)
+        if (gachaOnceButton == null)
         {
-            gachaOnceButton.SetActive(showMainButtons);
+            return;
         }
+        gachaOnceButton.SetActive(showMainButtons);
 
-        if (gachaTenButton != null)
+        if (gachaTenButton == null)
         {
-            gachaTenButton.SetActive(showMainButtons);
+            return;
         }
+        gachaTenButton.SetActive(showMainButtons);
 
-        if (exitButton != null)
+        if (exitButton == null)
         {
-            exitButton.SetActive(!showMainButtons);
+            return;
         }
+        exitButton.SetActive(showMainButtons == false);
     }
-   //characterList 자동으로 채우기  ~~~ 이건 몰라서 GPT물어봄
+
 #if UNITY_EDITOR
- 
     [ContextMenu("이름 및 확률 자동 설정")]
     void SetCharacterNamesAndProbabilities()
     {
@@ -191,9 +181,10 @@ public class GachaManager : MonoBehaviour
             Character c = new Character();
             c.name = name;
             c.probability = prob;
-            c.image = null; 
+            c.image = null;
             characterList.Add(c);
         }
+
         Add("R 박재완", 14f);
         Add("R 엄지성", 14f);
         Add("SR 한세웅", 5f);
@@ -204,7 +195,6 @@ public class GachaManager : MonoBehaviour
         Add("R 손석현", 14f);
         Add("SSR 김한나", 1f);
         Add("SR 신채현", 5f);
-
     }
 #endif
 }
