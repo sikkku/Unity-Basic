@@ -3212,10 +3212,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterList: []
-  resultImages: []
-  resultTexts: []
   resultSingleImage: {fileID: 0}
   resultSingleText: {fileID: 0}
+  resultImages: []
+  resultTexts: []
   pityText: {fileID: 1607577622}
   gachaOnceButton: {fileID: 2067595760}
   gachaTenButton: {fileID: 1032245681}
@@ -3578,6 +3578,50 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &2016193068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2016193070}
+  - component: {fileID: 2016193069}
+  m_Layer: 0
+  m_Name: Star
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2016193069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016193068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37cd8520ff3f1a04882464fd8a8257c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2016193070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016193068}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 453.6496, y: 447.50986, z: -5.106235}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2041716487
 GameObject:
   m_ObjectHideFlags: 0
@@ -3705,34 +3749,36 @@ MonoBehaviour:
   characterList:
   - name: "R \uBC15\uC7AC\uC644"
     image: {fileID: 21300000, guid: 89fa19702fbc6084a855e2607f5641ff, type: 3}
-    probability: 14
+    grade: 0
   - name: "R \uC5C4\uC9C0\uC131"
     image: {fileID: 21300000, guid: fe0685382058de043b806cd2ed50134e, type: 3}
-    probability: 14
+    grade: 0
   - name: "SR \uD55C\uC138\uC6C5"
     image: {fileID: 21300000, guid: 212afe6ac1d75994cabb9fccac421fc5, type: 3}
-    probability: 5
+    grade: 1
   - name: "SR \uCC9C\uC9C0\uC218"
     image: {fileID: 21300000, guid: a4d8173c1e2ca754ab1520240094b6ec, type: 3}
-    probability: 5
+    grade: 1
   - name: "R \uC870\uD615\uBBFC"
     image: {fileID: 21300000, guid: 42f5e5c686567494fabb23495a08083a, type: 3}
-    probability: 14
+    grade: 0
   - name: "R \uC774\uD638\uBC94"
     image: {fileID: 21300000, guid: a7d348aefbf930e4eaf1dc21225eec04, type: 3}
-    probability: 14
+    grade: 0
   - name: "R \uAE40\uC9C0\uC6D0"
     image: {fileID: 21300000, guid: 1fd4f698acbf7c8448fec1ddbd9d32c9, type: 3}
-    probability: 14
+    grade: 0
   - name: "R \uC190\uC11D\uD604"
     image: {fileID: 21300000, guid: 3a62ce0ba4c2ca240ba771dfeee7e8cb, type: 3}
-    probability: 14
+    grade: 0
   - name: "SSR \uAE40\uD55C\uB098"
     image: {fileID: 21300000, guid: 6f3ac0e52c069fe48948e464380f98e6, type: 3}
-    probability: 1
+    grade: 2
   - name: "SR \uC2E0\uCC44\uD604"
     image: {fileID: 21300000, guid: ff8b5b078e2cb8648b278f10a5cf750f, type: 3}
-    probability: 5
+    grade: 1
+  resultSingleImage: {fileID: 1422452021}
+  resultSingleText: {fileID: 1598598198}
   resultImages:
   - {fileID: 1282265551}
   - {fileID: 1068852490}
@@ -3755,8 +3801,6 @@ MonoBehaviour:
   - {fileID: 265888433}
   - {fileID: 359275821}
   - {fileID: 1206475997}
-  resultSingleImage: {fileID: 1422452021}
-  resultSingleText: {fileID: 1598598198}
   pityText: {fileID: 1607577622}
   gachaOnceButton: {fileID: 2067595760}
   gachaTenButton: {fileID: 1032245681}
@@ -4035,3 +4079,4 @@ SceneRoots:
   - {fileID: 1989016139}
   - {fileID: 501965519}
   - {fileID: 1319223556}
+  - {fileID: 2016193070}

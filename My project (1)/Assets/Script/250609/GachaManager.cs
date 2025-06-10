@@ -5,12 +5,14 @@ using System.Collections.Generic;
 
 public class GachaManager : MonoBehaviour
 {
+    public enum CharacterGrade { R, SR, SSR }
+
     [System.Serializable]
     public class Character
     {
         public string name;
         public Sprite image;
-        public float probability; //확률
+        public CharacterGrade grade;
     }
 
     [Header("캐릭터 리스트")]
@@ -23,7 +25,7 @@ public class GachaManager : MonoBehaviour
     [Header("10회 뽑기")]
     public Image[] resultImages;
     public TextMeshProUGUI[] resultTexts;
- 
+
     [Header("천장 텍스트")]
     public TextMeshProUGUI pityText;
 
@@ -34,6 +36,14 @@ public class GachaManager : MonoBehaviour
 
     private int pityCount = 0;
     private const int pityLimit = 100;
+
+
+    private Dictionary<CharacterGrade, float> gradeProbabilities = new Dictionary<CharacterGrade, float>()
+    {
+        { CharacterGrade.SSR, 1f },
+        { CharacterGrade.SR, 14f },
+        { CharacterGrade.R, 85f }
+    };
 
     public void GachaOnce()
     {
@@ -89,32 +99,38 @@ public class GachaManager : MonoBehaviour
 
     Character GetCharacterByProbability()
     {
+
         if (pityCount >= pityLimit)
         {
             pityCount = 0;
-            foreach (var c in characterList)
-            {
-                if (c.name.Contains("SSR"))
-                {
-                    return c;
-                }
-            }
-            return characterList[0];
+            return GetRandomCharacterInGrade(CharacterGrade.SSR);
         }
+
 
         float rand = Random.Range(0f, 100f);
         float cumulative = 0f;
-
-        foreach (var c in characterList)
+        foreach (var entry in gradeProbabilities)
         {
-            cumulative += c.probability;
+            cumulative += entry.Value;
             if (rand < cumulative)
             {
-                return c;
+                return GetRandomCharacterInGrade(entry.Key);
             }
         }
 
-        return characterList[characterList.Count - 1]; // fallback
+        // 혹시 뻑날까봐
+        return GetRandomCharacterInGrade(CharacterGrade.R);
+    }
+
+    Character GetRandomCharacterInGrade(CharacterGrade grade)
+    {
+        List<Character> candidates = characterList.FindAll(c => c.grade == grade);
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+        int index = Random.Range(0, candidates.Count);
+        return candidates[index];
     }
 
     public void ReturnToMain()
@@ -126,12 +142,10 @@ public class GachaManager : MonoBehaviour
 
     void UpdatePityText()
     {
-        if (pityText == null)
+        if (pityText != null)
         {
-            return;
+            pityText.text = "천장 카운트: " + pityCount + " / " + pityLimit;
         }
-
-        pityText.text = "천장 카운트: " + pityCount + " / " + pityLimit;
     }
 
     void HideSingleResult()
@@ -151,23 +165,20 @@ public class GachaManager : MonoBehaviour
 
     void ToggleButtons(bool showMainButtons)
     {
-        if (gachaOnceButton == null)
+        if (gachaOnceButton != null)
         {
-            return;
+            gachaOnceButton.SetActive(showMainButtons);
         }
-        gachaOnceButton.SetActive(showMainButtons);
 
-        if (gachaTenButton == null)
+        if (gachaTenButton != null)
         {
-            return;
+            gachaTenButton.SetActive(showMainButtons);
         }
-        gachaTenButton.SetActive(showMainButtons);
 
-        if (exitButton == null)
+        if (exitButton != null)
         {
-            return;
+            exitButton.SetActive(!showMainButtons);
         }
-        exitButton.SetActive(showMainButtons == false);
     }
 
 #if UNITY_EDITOR
@@ -176,25 +187,25 @@ public class GachaManager : MonoBehaviour
     {
         characterList.Clear();
 
-        void Add(string name, float prob)
+        void Add(string name, CharacterGrade grade)
         {
             Character c = new Character();
             c.name = name;
-            c.probability = prob;
+            c.grade = grade;
             c.image = null;
             characterList.Add(c);
         }
 
-        Add("R 박재완", 14f);
-        Add("R 엄지성", 14f);
-        Add("SR 한세웅", 5f);
-        Add("SR 천지수", 5f);
-        Add("R 조형민", 14f);
-        Add("R 이호범", 14f);
-        Add("R 김지원", 14f);
-        Add("R 손석현", 14f);
-        Add("SSR 김한나", 1f);
-        Add("SR 신채현", 5f);
+        Add("R 박재완", CharacterGrade.R);
+        Add("R 엄지성", CharacterGrade.R);
+        Add("SR 한세웅", CharacterGrade.SR);
+        Add("SR 천지수", CharacterGrade.SR);
+        Add("R 조형민", CharacterGrade.R);
+        Add("R 이호범", CharacterGrade.R);
+        Add("R 김지원", CharacterGrade.R);
+        Add("R 손석현", CharacterGrade.R);
+        Add("SSR 김한나", CharacterGrade.SSR);
+        Add("SR 신채현", CharacterGrade.SR);
     }
 #endif
 }
